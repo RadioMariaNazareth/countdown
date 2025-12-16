@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Countdown Timer</title>
+    <!-- Changed font to Inter (highly readable modern font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for easy color management */
+        :root {
+            /* Retaining accent color for glow/separators */
+            --color-light-blue: #4070A0; 
+            --color-black: #000000;
+            --color-white: #ffffff;
+            --color-glass-bg: rgba(255, 255, 255, 0.05); /* Slightly less opaque glass */
+            --color-glass-border: rgba(255, 255, 255, 0.2);
+            --color-timer-bg: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif; /* Updated Font */
+            color: var(--color-white);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Added overflow:hidden as requested */
+            overflow: hidden; 
+            position: relative;
+        }
+
+        /* Gradient Background Container (Uses new user-specified colors) */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* New, darker gradient: #0f172a (dark blue/slate) to #1e3a8a (indigo/deep blue) */
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            z-index: -1;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        /* --- Logo Styling (Big in the middle) --- */
+        .logo {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            /* Removed box-shadow to eliminate the square border/glow */
+        }
+
+        /* --- Glassy Futuristic Divs --- */
+        .glass-effect {
+            background: var(--color-glass-bg);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--color-glass-border);
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* --- Input Panel Styling --- */
+        .input-panel {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .input-panel h3 {
+            width: 100%;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-basis: 30%; 
+        }
+
+        .input-group label {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .input-panel input[type="number"] {
+            width: 100%;
+            max-width: 80px;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--color-black);
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .input-panel input[type="number"]:focus {
+            box-shadow: 0 0 15px var(--color-light-blue);
+        }
+
+        /* --- Countdown Display Styling --- */
+        .countdown-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .timer-display {
+            display: flex;
+            align-items: center;
+            font-size: 5em; 
+            font-weight: bold;
+            letter-spacing: 5px;
+            width: 100%; 
+            justify-content: space-evenly; 
+        }
+
+        .digit-box {
+            background: var(--color-timer-bg);
+            padding: 10px 15px;
+            border-radius: 8px;
+            min-width: 90px;
+            text-align: center;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+            transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+            flex-grow: 1; 
+        }
+
+        .separator {
+            margin: 0 10px;
+            color: var(--color-light-blue); /* Accent color */
+        }
+
+        /* --- Glass Button Styling --- */
+        .glass-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: var(--color-white);
+            padding: 12px 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: background 0.3s, box-shadow 0.3s, transform 0.1s;
+            margin-top: 10px;
+        }
+
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 20px var(--color-light-blue);
+        }
+
+        .glass-button:active {
+            transform: translateY(2px);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- 10-Second Animation Class --- */
+        .animate {
+            transform: scale(1.05); 
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 40px var(--color-light-blue); /* Intense glow using accent color */
+            border-color: var(--color-white);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+            .timer-display {
+                font-size: 3em;
+            }
+            .digit-box {
+                min-width: 60px;
+                padding: 5px 10px;
+            }
+            .separator {
+                margin: 0 5px;
+            }
+            .logo {
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-container"></div>
+
+    <div class="main-container">
+        <!-- Logo (Assumes logo.jpg is in the same folder) -->
+        <img src="logo.png" alt="Your Logo" class="logo">
+
+        <div class="input-panel glass-effect" id="input-controls">
+            <h3>Set Countdown Time</h3>
+            <div class="input-group">
+                <input type="number" id="hours-input" min="0" value="0" placeholder="0">
+                <label for="hours-input">Hours</label>
+            </div>
+            <div class="input-group">
+                <input type="number" id="minutes-input" min="0" value="0" placeholder="0">
+                <label for="minutes-input">Minutes</label>
+            </div>
+            <div class="input-group">
+                <input type="number" id="seconds-input" min="0" value="0" placeholder="0">
+                <label for="seconds-input">Seconds</label>
+            </div>
+            <button id="start-button" class="glass-button" style="width: 90%;">Start Countdown</button>
+        </div>
+
+        <div class="countdown-panel glass-effect hidden" id="countdown-view">
+            <!-- Updated initial message text -->
+            <h2 id="countdown-title">We'll be live in</h2>
+            <div id="countdown-display" class="timer-display">
+                <span class="digit-box" id="hours-display">00</span>
+                <span class="separator">:</span>
+                <span class="digit-box" id="minutes-display">00</span>
+                <span class="separator">:</span>
+                <span class="digit-box" id="seconds-display">00</span>
+            </div>
+            <button id="reset-button" class="glass-button">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const hoursInput = document.getElementById('hours-input');
+        const minutesInput = document.getElementById('minutes-input');
+        const secondsInput = document.getElementById('seconds-input');
+        const startButton = document.getElementById('start-button');
+        const resetButton = document.getElementById('reset-button');
+
+        const hoursDisplay = document.getElementById('hours-display');
+        const minutesDisplay = document.getElementById('minutes-display');
+        const secondsDisplay = document.getElementById('seconds-display');
+        const countdownTitle = document.getElementById('countdown-title');
+        const digitBoxes = document.querySelectorAll('.digit-box');
+        const countdownView = document.getElementById('countdown-view');
+        const inputControls = document.getElementById('input-controls');
+
+        // --- State Variables ---
+        let countdownInterval;
+        let animationInterval;
+        let totalSeconds = 0;
+        
+        // --- Constant Message Text ---
+        const activeMessage = "We'll be live in"; // New active message
+        const defaultMessage = "Set Countdown Time";
+        const finishedMessage = "Time's Up! (Click Reset)";
+        const errorMessage = "Time must be greater than zero!";
+
+
+        // --- Utility Functions ---
+
+        // Function to format time: adds a leading zero if number < 10
+        function formatTime(time) {
+            return time < 10 ? `0${time}` : time;
+        }
+
+        // Function to display messages without using alert()
+        function showMessage(message) {
+            countdownTitle.textContent = message;
+            // Temporarily update the countdown title for user feedback
+            setTimeout(() => {
+                if (countdownView.classList.contains('hidden')) {
+                     countdownTitle.textContent = defaultMessage; // Reset if inputs are visible
+                } else if (totalSeconds > 0) {
+                    countdownTitle.textContent = activeMessage; // Reset if countdown is running
+                } else {
+                    countdownTitle.textContent = finishedMessage; // Keep finished message if time is 0
+                }
+            }, 3000);
+        }
+
+        // Function to update the display elements
+        function updateDisplay() {
+            if (totalSeconds < 0) {
+                clearInterval(countdownInterval);
+                clearInterval(animationInterval);
+                totalSeconds = 0;
+                countdownTitle.textContent = finishedMessage; // Use the constant
+                resetButton.style.display = 'block'; 
+                return;
+            }
+
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+
+            hoursDisplay.textContent = formatTime(h);
+            minutesDisplay.textContent = formatTime(m);
+            secondsDisplay.textContent = formatTime(s);
+
+            totalSeconds--;
+        }
+
+        // Function to start the animation every 10 seconds
+        function startAnimation() {
+            animationInterval = setInterval(() => {
+                // Apply the animation class to all digit boxes
+                digitBoxes.forEach(box => {
+                    box.classList.add('animate');
+                });
+
+                // Remove the animation class after a short delay (e.g., 200ms)
+                setTimeout(() => {
+                    digitBoxes.forEach(box => {
+                        box.classList.remove('animate');
+                    });
+                }, 200);
+            }, 10000); // 10000 milliseconds = 10 seconds
+        }
+
+        // Function to handle the start button click
+        function startCountdown() {
+            // Use parseInt or 0 fallback for input values
+            const hours = parseInt(hoursInput.value) || 0;
+            const minutes = parseInt(minutesInput.value) || 0;
+            const seconds = parseInt(secondsInput.value) || 0;
+
+            totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+
+            if (totalSeconds <= 0) {
+                showMessage(errorMessage); // Use the constant
+                return;
+            }
+
+            // UI State Transition: Hide input, show countdown
+            inputControls.classList.add('hidden');
+            countdownView.classList.remove('hidden');
+            countdownTitle.textContent = activeMessage; // Use the constant
+            resetButton.style.display = 'none'; 
+
+            // Initial display update immediately
+            updateDisplay(); 
+            
+            // Start the main countdown timer (updates every 1 second)
+            countdownInterval = setInterval(updateDisplay, 1000);
+
+            // Start the animation interval (updates every 10 seconds)
+            startAnimation();
+        }
+
+        // Function to handle the reset button click
+        function resetCountdown() {
+            clearInterval(countdownInterval);
+            clearInterval(animationInterval);
+            totalSeconds = 0;
+            
+            // Reset inputs
+            hoursInput.value = 0;
+            minutesInput.value = 0;
+            secondsInput.value = 0;
+
+            // Reset display
+            hoursDisplay.textContent = "00";
+            minutesDisplay.textContent = "00";
+            secondsDisplay.textContent = "00";
+            
+            // UI State Transition: Show input, hide countdown
+            inputControls.classList.remove('hidden');
+            countdownView.classList.add('hidden');
+            
+            // The <h3> inside input-panel holds the default message, so we don't need to update countdownTitle here.
+        }
+
+        // --- Event Listeners and Initial Setup ---
+        startButton.addEventListener('click', startCountdown);
+        resetButton.addEventListener('click', resetCountdown);
+
+        // Hide the countdown view on initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            countdownView.classList.add('hidden');
+            resetButton.style.display = 'none'; // Ensure button is hidden initially
+            
+            // Ensure input control title is set correctly on load
+            document.querySelector('.input-panel h3').textContent = defaultMessage;
+        });
+    </script>
+</body>
+</html>
