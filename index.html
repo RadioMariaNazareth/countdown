@@ -212,6 +212,7 @@ input {
 <div class="main">
     <img src="logo.png" class="logo" id="logo">
 
+    <!-- INPUT PANEL -->
     <div id="inputPanel" class="panel">
         <h3 id="panelTitle">Set Countdown Duration</h3>
 
@@ -239,6 +240,7 @@ input {
         <button id="start" class="glass-button">Start Countdown</button>
     </div>
 
+    <!-- COUNTDOWN -->
     <div id="countdownPanel" class="panel hidden">
         <h2 id="title">🔴 LIVE BEGINS IN</h2>
         <div class="timer">
@@ -248,8 +250,6 @@ input {
             <div class="separator">:</div>
             <div id="ds" class="digit">00</div>
         </div>
-        <br>
-        <button id="reset" class="glass-button">Reset</button>
     </div>
 </div>
 
@@ -319,15 +319,6 @@ function update() {
 
     totalSeconds--;
 }
-
-/* RESET */
-reset.onclick = () => {
-    clearInterval(interval);
-    countdownPanel.classList.add("hidden");
-    inputPanel.classList.remove("hidden");
-    title.textContent = "🔴 LIVE BEGINS IN";
-    logo.classList.remove("glowing");
-};
 </script>
 
 </body>
