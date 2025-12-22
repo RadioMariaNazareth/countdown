@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RMN-countdown</title>
+<title>RMN Countdown</title>
 
+<link rel="shortcut icon" href="logo.png" type="image/x-icon">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -41,7 +42,7 @@ body {
     z-index: 100;
 }
 
-/* BURGER */
+/* MENU ICON */
 .menu-icon {
     width: 32px;
     height: 22px;
@@ -58,6 +59,15 @@ body {
     border-radius: 2px;
     transition: 0.3s;
 }
+.menu-icon.active span:nth-child(1) {
+    transform: rotate(45deg) translateY(9px);
+}
+.menu-icon.active span:nth-child(2) {
+    opacity: 0;
+}
+.menu-icon.active span:nth-child(3) {
+    transform: rotate(-45deg) translateY(-9px);
+}
 
 /* MENU */
 .menu-dropdown {
@@ -71,11 +81,13 @@ body {
     border-top: none;
     padding: 10px;
     opacity: 0;
+    transform: translateY(-10px);
     pointer-events: none;
     transition: 0.3s;
 }
 .menu-dropdown.show {
     opacity: 1;
+    transform: translateY(0);
     pointer-events: auto;
 }
 
@@ -90,6 +102,9 @@ body {
     border-radius: 12px;
     cursor: pointer;
 }
+.glass-button:hover {
+    box-shadow: 0 0 15px var(--accent);
+}
 
 /* MAIN */
 .main {
@@ -99,19 +114,38 @@ body {
     text-align: center;
 }
 
-/* LOGO GLOW */
-.logo-wrap {
-    width: 220px;
-    height: 220px;
-    margin: 0 auto 30px;
+/* LOGO */
+.logo {
+    max-width: 260px;
+    margin-bottom: 30px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 40px rgba(255,255,255,0.7);
+    box-shadow:
+        0 0 8px rgba(255,255,255,0.35),
+        0 0 16px rgba(255,255,255,0.25);
 }
-.logo-wrap img {
-    width: 160px;
+
+/* GLOW ANIMATION */
+.logo.glowing {
+    animation: glowPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0% {
+        box-shadow:
+            0 0 6px rgba(255,255,255,0.35),
+            0 0 12px rgba(255,255,255,0.2);
+    }
+    50% {
+        box-shadow:
+            0 0 18px rgba(255,255,255,0.9),
+            0 0 35px rgba(255,255,255,0.6),
+            0 0 55px rgba(255,255,255,0.35);
+    }
+    100% {
+        box-shadow:
+            0 0 6px rgba(255,255,255,0.35),
+            0 0 12px rgba(255,255,255,0.2);
+    }
 }
 
 /* PANEL */
@@ -128,6 +162,11 @@ body {
     display: flex;
     justify-content: center;
     gap: 15px;
+    flex-wrap: wrap;
+}
+.input-group {
+    display: flex;
+    flex-direction: column;
 }
 input {
     width: 90px;
@@ -147,30 +186,11 @@ input {
 .digit {
     background: rgba(0,0,0,0.35);
     padding: 15px;
-    border-radius: 12px;
+    border-radius: 10px;
     min-width: 80px;
-    transition: transform 0.4s, box-shadow 0.4s;
 }
-.timer.pulse .digit {
-    transform: scale(1.08);
-    box-shadow: 0 0 20px var(--accent);
-}
-
-/* RED LIVE DOT */
-.live-dot {
-    width: 14px;
-    height: 14px;
-    background: red;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 10px;
-    box-shadow: 0 0 10px red;
-    animation: glow 1.5s infinite alternate;
-}
-
-@keyframes glow {
-    from { box-shadow: 0 0 6px red; }
-    to { box-shadow: 0 0 18px red; }
+.separator {
+    color: var(--accent);
 }
 
 .hidden { display: none; }
@@ -179,7 +199,7 @@ input {
 
 <body>
 
-<header id="header" class="header">
+<header class="header">
     <button id="menuBtn" class="menu-icon">
         <span></span><span></span><span></span>
     </button>
@@ -190,91 +210,123 @@ input {
 </header>
 
 <div class="main">
-    <div class="logo-wrap">
-        <img src="logo.png">
-    </div>
+    <img src="logo.png" class="logo" id="logo">
 
     <div id="inputPanel" class="panel">
-        <h3>Set Countdown Duration</h3>
-        <div class="inputs">
-            <input id="h" type="number" value="0">
-            <input id="m" type="number" value="0">
-            <input id="s" type="number" value="10">
+        <h3 id="panelTitle">Set Countdown Duration</h3>
+
+        <div id="durationInputs" class="inputs">
+            <div class="input-group">
+                <input id="h" type="number" value="0">
+                <label>Hours</label>
+            </div>
+            <div class="input-group">
+                <input id="m" type="number" value="0">
+                <label>Minutes</label>
+            </div>
+            <div class="input-group">
+                <input id="s" type="number" value="0">
+                <label>Seconds</label>
+            </div>
         </div>
+
+        <div id="eventInputs" class="inputs hidden">
+            <input id="date" type="date">
+            <input id="time" type="time" value="12:00">
+        </div>
+
         <br>
         <button id="start" class="glass-button">Start Countdown</button>
     </div>
 
     <div id="countdownPanel" class="panel hidden">
-        <h2>
-            <span class="live-dot"></span>
-            LIVE BEGINS IN
-        </h2>
-
-        <div id="timer" class="timer">
+        <h2 id="title">🔴 LIVE BEGINS IN</h2>
+        <div class="timer">
             <div id="dh" class="digit">00</div>
-            <div>:</div>
+            <div class="separator">:</div>
             <div id="dm" class="digit">00</div>
-            <div>:</div>
+            <div class="separator">:</div>
             <div id="ds" class="digit">00</div>
         </div>
-
         <br>
         <button id="reset" class="glass-button">Reset</button>
     </div>
 </div>
 
 <script>
-let totalSeconds = 0;
+let mode = "duration";
 let interval;
-let tick = 0;
+let totalSeconds = 0;
 
+/* MENU */
+menuBtn.onclick = () => {
+    menuBtn.classList.toggle("active");
+    menu.classList.toggle("show");
+};
+
+modeDuration.onclick = () => switchMode("duration");
+modeEvent.onclick = () => switchMode("event");
+
+function switchMode(m) {
+    mode = m;
+    durationInputs.classList.toggle("hidden", m !== "duration");
+    eventInputs.classList.toggle("hidden", m !== "event");
+    panelTitle.textContent = m === "duration"
+        ? "Set Countdown Duration"
+        : "Set Target Event Time";
+    menu.classList.remove("show");
+    menuBtn.classList.remove("active");
+}
+
+/* START */
 start.onclick = () => {
-    totalSeconds =
-        (+h.value * 3600) +
-        (+m.value * 60) +
-        (+s.value);
+    clearInterval(interval);
 
-    if (totalSeconds <= 0) return alert("Time must be > 0");
+    if (mode === "duration") {
+        totalSeconds =
+            (+h.value || 0) * 3600 +
+            (+m.value || 0) * 60 +
+            (+s.value || 0);
+        if (totalSeconds <= 0) return alert("Time must be greater than zero");
+    } else {
+        const target = new Date(`${date.value}T${time.value}`).getTime();
+        totalSeconds = Math.floor((target - Date.now()) / 1000);
+        if (totalSeconds <= 0) return alert("Event must be in the future");
+    }
 
     inputPanel.classList.add("hidden");
     countdownPanel.classList.remove("hidden");
-    header.classList.add("hidden");
-    reset.classList.add("hidden");
+    logo.classList.add("glowing");
 
     update();
     interval = setInterval(update, 1000);
 };
 
 function update() {
-    const hrs = Math.floor(totalSeconds / 3600);
-    const mins = Math.floor((totalSeconds % 3600) / 60);
-    const secs = totalSeconds % 60;
-
-    dh.textContent = String(hrs).padStart(2, "0");
-    dm.textContent = String(mins).padStart(2, "0");
-    ds.textContent = String(secs).padStart(2, "0");
-
-    if (tick % 10 === 0) {
-        timer.classList.add("pulse");
-        setTimeout(() => timer.classList.remove("pulse"), 400);
-    }
-
-    tick++;
-
-    if (totalSeconds === 0) {
+    if (totalSeconds <= 0) {
         clearInterval(interval);
+        title.textContent = "🔴 LIVE NOW";
         return;
     }
+
+    const hh = Math.floor(totalSeconds / 3600);
+    const mm = Math.floor((totalSeconds % 3600) / 60);
+    const ss = totalSeconds % 60;
+
+    dh.textContent = String(hh).padStart(2, "0");
+    dm.textContent = String(mm).padStart(2, "0");
+    ds.textContent = String(ss).padStart(2, "0");
+
     totalSeconds--;
 }
 
+/* RESET */
 reset.onclick = () => {
     clearInterval(interval);
-    header.classList.remove("hidden");
-    reset.classList.remove("hidden");
     countdownPanel.classList.add("hidden");
     inputPanel.classList.remove("hidden");
+    title.textContent = "🔴 LIVE BEGINS IN";
+    logo.classList.remove("glowing");
 };
 </script>
 
