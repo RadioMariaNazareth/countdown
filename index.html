@@ -4,322 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RMN Countdown</title>
-
 <link rel="shortcut icon" href="logo.png" type="image/x-icon">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-    --accent: #4070A0;
-    --glass-bg: rgba(255,255,255,0.06);
-    --glass-border: rgba(255,255,255,0.25);
-    --header-height: 60px;
-}
-
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    color: white;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    background: linear-gradient(135deg, #0f172a, #1e3a8a);
-}
-
-/* HEADER */
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: var(--header-height);
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-    background: rgba(15,23,42,0.85);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--glass-border);
-    z-index: 100;
-}
-
-/* MENU ICON */
-.menu-icon {
-    width: 32px;
-    height: 22px;
-    background: none;
-    border: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    cursor: pointer;
-}
-.menu-icon span {
-    height: 3px;
-    background: white;
-    border-radius: 2px;
-    transition: 0.3s;
-}
-.menu-icon.active span:nth-child(1) {
-    transform: rotate(45deg) translateY(9px);
-}
-.menu-icon.active span:nth-child(2) {
-    opacity: 0;
-}
-.menu-icon.active span:nth-child(3) {
-    transform: rotate(-45deg) translateY(-9px);
-}
-
-/* MENU */
-.menu-dropdown {
-    position: absolute;
-    top: var(--header-height);
-    left: 20px;
-    width: 240px;
-    background: rgba(15,23,42,0.95);
-    border-radius: 0 0 12px 12px;
-    border: 1px solid var(--glass-border);
-    border-top: none;
-    padding: 10px;
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-    transition: 0.3s;
-}
-.menu-dropdown.show {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-/* BUTTONS */
-.glass-button {
-    width: 100%;
-    margin: 6px 0;
-    padding: 12px;
-    background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.4);
-    color: white;
-    border-radius: 12px;
-    cursor: pointer;
-}
-.glass-button:hover {
-    box-shadow: 0 0 15px var(--accent);
-}
-
-/* MAIN */
-.main {
-    margin-top: 120px;
-    width: 90%;
-    max-width: 600px;
-    text-align: center;
-}
-
-/* LOGO */
-.logo {
-    max-width: 260px;
-    margin-bottom: 30px;
-    border-radius: 50%;
-    box-shadow:
-        0 0 8px rgba(255,255,255,0.35),
-        0 0 16px rgba(255,255,255,0.25);
-}
-
-/* GLOW ANIMATION */
-.logo.glowing {
-    animation: glowPulse 2.2s ease-in-out infinite;
-}
-
-@keyframes glowPulse {
-    0% {
-        box-shadow:
-            0 0 6px rgba(255,255,255,0.35),
-            0 0 12px rgba(255,255,255,0.2);
-    }
-    50% {
-        box-shadow:
-            0 0 18px rgba(255,255,255,0.9),
-            0 0 35px rgba(255,255,255,0.6),
-            0 0 55px rgba(255,255,255,0.35);
-    }
-    100% {
-        box-shadow:
-            0 0 6px rgba(255,255,255,0.35),
-            0 0 12px rgba(255,255,255,0.2);
-    }
-}
-
-/* PANEL */
-.panel {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    padding: 20px;
-    backdrop-filter: blur(15px);
-}
-
-/* INPUTS */
-.inputs {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-.input-group {
-    display: flex;
-    flex-direction: column;
-}
-input {
-    width: 90px;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    text-align: center;
-}
-
-/* COUNTDOWN */
-.timer {
-    display: flex;
-    justify-content: center;
-    font-size: 4em;
-    gap: 10px;
-}
-.digit {
-    background: rgba(0,0,0,0.35);
-    padding: 15px;
-    border-radius: 10px;
-    min-width: 80px;
-}
-.separator {
-    color: var(--accent);
-}
-
-.hidden { display: none; }
+:root { --accent:#72b5ef; --glass-bg:rgba(255,255,255,.07); --glass-border:rgba(255,255,255,.25); --header-height:60px; }
+* { box-sizing:border-box; }
+body { margin:0; font-family:Inter,sans-serif; color:white; min-height:100vh; display:flex; justify-content:center; background:linear-gradient(135deg,#0f172a,#1e3a8a); }
+.header { position:fixed; top:0; left:0; height:var(--header-height); width:100%; display:flex; align-items:center; padding-left:20px; background:rgba(15,23,42,.85); backdrop-filter:blur(10px); border-bottom:1px solid var(--glass-border); z-index:100; }
+.menu-icon { width:32px; height:22px; padding:0; background:none; border:0; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; }
+.menu-icon span { height:3px; background:white; border-radius:2px; transition:.3s; }
+.menu-icon.active span:nth-child(1) { transform:rotate(45deg) translateY(9px); }.menu-icon.active span:nth-child(2) { opacity:0; }.menu-icon.active span:nth-child(3) { transform:rotate(-45deg) translateY(-9px); }
+.menu-dropdown { position:absolute; top:var(--header-height); left:20px; width:240px; background:rgba(15,23,42,.95); border-radius:0 0 12px 12px; border:1px solid var(--glass-border); border-top:0; padding:10px; opacity:0; transform:translateY(-10px); pointer-events:none; transition:.3s; }.menu-dropdown.show { opacity:1; transform:translateY(0); pointer-events:auto; }
+.glass-button { width:100%; margin:6px 0; padding:12px; background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.4); color:white; border-radius:12px; cursor:pointer; font:inherit; font-weight:600; }.glass-button:hover,.glass-button:focus-visible { box-shadow:0 0 15px var(--accent); outline:none; }
+.main { margin:100px 0 35px; width:min(90%,650px); text-align:center; }.logo { width:min(190px,55vw); margin-bottom:22px; border-radius:50%; box-shadow:0 0 8px rgba(255,255,255,.35),0 0 16px rgba(255,255,255,.25); }.logo.glowing { animation:glowPulse 2.2s ease-in-out infinite; } @keyframes glowPulse { 50% { box-shadow:0 0 18px rgba(255,255,255,.9),0 0 35px rgba(255,255,255,.6),0 0 55px rgba(255,255,255,.35); } }
+.panel { background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:20px; padding:24px; backdrop-filter:blur(15px); }.panel h3 { margin-top:0; }
+.inputs { display:flex; justify-content:center; gap:15px; flex-wrap:wrap; }.input-group { display:flex; flex-direction:column; gap:6px; text-align:left; }.input-group label { font-size:.85rem; color:rgba(255,255,255,.8); } input,textarea { width:100%; padding:11px 12px; border-radius:8px; border:1px solid transparent; font:inherit; color:#10213d; background:white; } input:focus,textarea:focus { outline:2px solid var(--accent); outline-offset:2px; }
+#durationInputs input { width:90px; text-align:center; }.event-form { display:grid; gap:14px; text-align:left; }.event-form .date-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }.event-form textarea { min-height:84px; resize:vertical; }.helper { margin:0; color:rgba(255,255,255,.72); font-size:.82rem; }
+.event-card { margin-bottom:20px; padding:18px; text-align:center; border-top:3px solid var(--accent); border-radius:12px; background:rgba(0,0,0,.2); }.event-card h1 { margin:0; font-size:clamp(1.5rem,5vw,2.25rem); line-height:1.15; }.event-card p:last-child { margin:10px 0 0; color:rgba(255,255,255,.8); line-height:1.55; white-space:pre-wrap; }
+.timer { display:flex; justify-content:center; align-items:center; font-size:clamp(2.2rem,9vw,4em); gap:10px; }.digit { background:rgba(0,0,0,.35); padding:15px 10px; border-radius:10px; min-width:80px; }.separator { color:var(--accent); }.hidden { display:none; }
+@media (max-width:430px) { .panel { padding:18px 12px; }.event-form .date-row { grid-template-columns:1fr; }.timer { gap:5px; }.digit { min-width:0; flex:1; padding:13px 5px; } }
 </style>
 </head>
-
 <body>
-
-<header class="header">
-    <button id="menuBtn" class="menu-icon">
-        <span></span><span></span><span></span>
-    </button>
-    <div id="menu" class="menu-dropdown">
-        <button id="modeDuration" class="glass-button">Normal Countdown</button>
-        <button id="modeEvent" class="glass-button">Event Countdown</button>
-    </div>
-</header>
-
-<div class="main">
-    <img src="logo.png" class="logo" id="logo">
-
-    <!-- INPUT PANEL -->
-    <div id="inputPanel" class="panel">
-        <h3 id="panelTitle">Set Countdown Duration</h3>
-
-        <div id="durationInputs" class="inputs">
-            <div class="input-group">
-                <input id="h" type="number" value="0">
-                <label>Hours</label>
-            </div>
-            <div class="input-group">
-                <input id="m" type="number" value="0">
-                <label>Minutes</label>
-            </div>
-            <div class="input-group">
-                <input id="s" type="number" value="0">
-                <label>Seconds</label>
-            </div>
-        </div>
-
-        <div id="eventInputs" class="inputs hidden">
-            <input id="date" type="date">
-            <input id="time" type="time" value="12:00">
-        </div>
-
-        <br>
-        <button id="start" class="glass-button">Start Countdown</button>
-    </div>
-
-    <!-- COUNTDOWN -->
-    <div id="countdownPanel" class="panel hidden">
-        <h2 id="title">🔴 LIVE BEGINS IN</h2>
-        <div class="timer">
-            <div id="dh" class="digit">00</div>
-            <div class="separator">:</div>
-            <div id="dm" class="digit">00</div>
-            <div class="separator">:</div>
-            <div id="ds" class="digit">00</div>
-        </div>
-    </div>
-</div>
-
+<header class="header"><button id="menuBtn" class="menu-icon" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><div id="menu" class="menu-dropdown"><button id="modeDuration" class="glass-button">Normal Countdown</button><button id="modeEvent" class="glass-button">Event Countdown</button></div></header>
+<main class="main">
+ <img src="logo.png" class="logo" id="logo" alt="RMN logo">
+ <section id="inputPanel" class="panel"><h3 id="panelTitle">Set Countdown Duration</h3>
+  <div id="countdownDetails" class="event-form"><div class="input-group"><label for="eventName">Event name <span aria-hidden="true">(optional)</span></label><input id="eventName" type="text" maxlength="80" placeholder="e.g. Product launch"></div><div class="input-group"><label for="eventDescription">Description <span aria-hidden="true">(optional)</span></label><textarea id="eventDescription" maxlength="240" placeholder="Add a short detail, welcome message, or call to action."></textarea><p class="helper">These details appear above the timer.</p></div></div>
+  <div id="durationInputs" class="inputs"><div class="input-group"><input id="h" type="number" min="0" value="0"><label for="h">Hours</label></div><div class="input-group"><input id="m" type="number" min="0" value="0"><label for="m">Minutes</label></div><div class="input-group"><input id="s" type="number" min="0" value="0"><label for="s">Seconds</label></div></div>
+  <div id="eventInputs" class="event-form hidden"><div class="date-row"><div class="input-group"><label for="date">Event date</label><input id="date" type="date"></div><div class="input-group"><label for="time">Event time</label><input id="time" type="time" value="12:00"></div></div></div>
+  <button id="start" class="glass-button">Start Countdown</button>
+ </section>
+ <section id="countdownPanel" class="panel hidden" aria-live="polite"><div id="eventCard" class="event-card hidden"><h1 id="eventTitle"></h1><p id="eventCopy" class="hidden"></p></div><h2 id="title">COUNTDOWN</h2><div class="timer" aria-label="Time remaining"><div id="dh" class="digit">00</div><div class="separator">:</div><div id="dm" class="digit">00</div><div class="separator">:</div><div id="ds" class="digit">00</div></div></section>
+</main>
 <script>
-let mode = "duration";
-let interval;
-let totalSeconds = 0;
-
-/* MENU */
-menuBtn.onclick = () => {
-    menuBtn.classList.toggle("active");
-    menu.classList.toggle("show");
-};
-
-modeDuration.onclick = () => switchMode("duration");
-modeEvent.onclick = () => switchMode("event");
-
-function switchMode(m) {
-    mode = m;
-    durationInputs.classList.toggle("hidden", m !== "duration");
-    eventInputs.classList.toggle("hidden", m !== "event");
-    panelTitle.textContent = m === "duration"
-        ? "Set Countdown Duration"
-        : "Set Target Event Time";
-    menu.classList.remove("show");
-    menuBtn.classList.remove("active");
-}
-
-/* START */
-start.onclick = () => {
-    clearInterval(interval);
-
-    if (mode === "duration") {
-        totalSeconds =
-            (+h.value || 0) * 3600 +
-            (+m.value || 0) * 60 +
-            (+s.value || 0);
-        if (totalSeconds <= 0) return alert("Time must be greater than zero");
-    } else {
-        const target = new Date(`${date.value}T${time.value}`).getTime();
-        totalSeconds = Math.floor((target - Date.now()) / 1000);
-        if (totalSeconds <= 0) return alert("Event must be in the future");
-    }
-
-    inputPanel.classList.add("hidden");
-    countdownPanel.classList.remove("hidden");
-    logo.classList.add("glowing");
-
-    update();
-    interval = setInterval(update, 1000);
-};
-
-function update() {
-    if (totalSeconds <= 0) {
-        clearInterval(interval);
-        title.textContent = "🔴 LIVE NOW";
-        return;
-    }
-
-    const hh = Math.floor(totalSeconds / 3600);
-    const mm = Math.floor((totalSeconds % 3600) / 60);
-    const ss = totalSeconds % 60;
-
-    dh.textContent = String(hh).padStart(2, "0");
-    dm.textContent = String(mm).padStart(2, "0");
-    ds.textContent = String(ss).padStart(2, "0");
-
-    totalSeconds--;
-}
+let mode = "duration", interval, totalSeconds = 0;
+const $ = id => document.getElementById(id);
+const menuBtn=$("menuBtn"), menu=$("menu"), durationInputs=$("durationInputs"), eventInputs=$("eventInputs"), panelTitle=$("panelTitle"), inputPanel=$("inputPanel"), countdownPanel=$("countdownPanel"), logo=$("logo"), title=$("title"), eventCard=$("eventCard"), eventTitle=$("eventTitle"), eventCopy=$("eventCopy");
+menuBtn.onclick=()=>{ const open=menu.classList.toggle("show"); menuBtn.classList.toggle("active",open); menuBtn.setAttribute("aria-expanded",open); };
+$("modeDuration").onclick=()=>switchMode("duration"); $("modeEvent").onclick=()=>switchMode("event");
+function switchMode(nextMode) { mode=nextMode; durationInputs.classList.toggle("hidden",mode!=="duration"); eventInputs.classList.toggle("hidden",mode!=="event"); panelTitle.textContent=mode==="duration"?"Set Countdown Duration":"Set Up Your Event"; menu.classList.remove("show"); menuBtn.classList.remove("active"); menuBtn.setAttribute("aria-expanded","false"); }
+$("start").onclick=()=>{ clearInterval(interval); const name=$("eventName").value.trim(), description=$("eventDescription").value.trim(); if(mode==="duration"){ totalSeconds=(+$("h").value||0)*3600+(+$("m").value||0)*60+(+$("s").value||0); if(totalSeconds<=0)return alert("Time must be greater than zero"); title.textContent="COUNTDOWN"; } else { const target=new Date(`${$("date").value}T${$("time").value}`).getTime(); totalSeconds=Math.floor((target-Date.now())/1000); if(!Number.isFinite(target)||totalSeconds<=0)return alert("Event must be in the future"); title.textContent="BEGINS IN"; } eventTitle.textContent=name; eventCopy.textContent=description; eventCopy.classList.toggle("hidden",!description); eventCard.classList.toggle("hidden",!name&&!description); inputPanel.classList.add("hidden"); countdownPanel.classList.remove("hidden"); logo.classList.add("glowing"); update(); interval=setInterval(update,1000); };
+function update(){ if(totalSeconds<=0){ clearInterval(interval); title.textContent=mode==="event"?"HAPPENING NOW":"TIME'S UP"; return; } const hours=Math.floor(totalSeconds/3600), minutes=Math.floor(totalSeconds%3600/60), seconds=totalSeconds%60; $("dh").textContent=String(hours).padStart(2,"0"); $("dm").textContent=String(minutes).padStart(2,"0"); $("ds").textContent=String(seconds).padStart(2,"0"); totalSeconds--; }
 </script>
-
 </body>
 </html>
